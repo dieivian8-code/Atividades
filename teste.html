@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetFome - Rações Premium</title>
+    <style>
+        /* CSS3 - Estilização Global */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* Cabeçalho e Navegação */
+        header {
+            background-color: #ff9f43;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #57320f;
+        }
+
+        /* Estrutura de Páginas */
+        .page {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 80vh;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* Banner Inicial */
+        .hero {
+            text-align: center;
+            padding: 5rem 1rem;
+            background: linear-gradient(rgba(255,159,67,0.1), rgba(255,159,67,0.2)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .hero-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            display: inline-block;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .hero h2 {
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            color: #d35400;
+        }
+
+        /* Grid do Catálogo de Produtos */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .product-card p {
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            color: #2ecc71;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background-color: #ff9f43;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #e67e22;
+        }
+
+        /* Área de Checkout / Carrinho */
+        .checkout-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 4px solid #ff9f43;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total {
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: right;
+            margin: 1.5rem 0;
+            color: #2d3436;
+        }
+
+        /* Formulários e Inputs */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* Campos Dinâmicos de Pagamento */
+        .payment-details {
+            background: #fcfcfc;
+            border: 1px dashed #ddd;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .pix-code-box {
+            background: #e1f5fe;
+            padding: 0.8rem;
+            border-radius: 4px;
+            font-family: monospace;
+            word-break: break-all;
+            margin-top: 0.5rem;
+            border: 1px solid #b3e5fc;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>🐾 PetFome</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a onclick="showPage('inicio')">Início</a></li>
+                <li><a onclick="showPage('catalogo')">Catálogo</a></li>
+                <li><a onclick="showPage('sobre')">Sobre Nós</a></li>
+                <li><a onclick="showPage('contato')">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="inicio" class="page active">
+        <div class="hero">
+            <div class="hero-content">
+                <h2>A melhor nutrição para o seu melhor amigo!</h2>
+                <p>Trabalhamos com rações selecionadas para cães de todos os portes e idades.</p>
+                <br>
+                <button onclick="showPage('catalogo')" style="width: auto; padding: 0.8rem 2.5rem;">Ir para a Loja</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="catalogo" class="page">
+        <h2>Nosso Catálogo de Rações</h2>
+        <p>Escolha os itens abaixo e configure seu pagamento digital.</p>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=500&q=80" alt="Ração Filhotes" class="product-img">
+                </div>
+                <div class="product-info">
+                    <h3>Ração Premium Filhotes</h3>
+                    <p>Sabor Frango e Arroz - Saco de 10kg</p>
+                    <div class="price">R$ 120,00</div>
+                    <button onclick="addToCart('Ração Premium Filhotes', 120.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="https://images.unsplash.com/photo-1608454528989-8d444d724188?auto=format&fit=crop&w=500&q=80" alt="Ração Natural" class="product-img">
+                </div>
+                <div class="product-info">
+                    <h3>Ração Natural Adultos</h3>
+                    <p>Livre de transgênicos - Saco de 15kg</p>
+                    <div class="price">R$ 180,00</div>
+                    <button onclick="addToCart('Ração Natural Adultos', 180.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?auto=format&fit=crop&w=500&q=80" alt="Ração Senior" class="product-img">
+                </div>
+                <div class="product-info">
+                    <h3>Ração Cães Idosos (Sênior)</h3>
+                    <p>Com proteção articular - Saco de 12kg</p>
+                    <div class="price">R$ 150,00</div>
+                    <button onclick="addToCart('Ração Cães Idosos', 150.00)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-section">
+            <h3>🛒 Carrinho e Finalização da Compra</h3>
+            
+            <div id="cart-items">
+                <p style="color: #777; padding: 1rem 0; text-align: center;">O carrinho está vazio atualmente.</p>
+            </div>
+            
+            <div class="total">Total: R$ <span id="cart-total">0,00</span></div>
+
+            <form id="payment-form" onsubmit="finalizePurchase(event)">
+                <div class="form-group">
+                    <label for="payment-method">Escolha a Forma de Pagamento:</label>
+                    <select id="payment-method" onchange="togglePaymentFields()" required>
+                        <option value="">-- Selecione uma opção --</option>
+                        <option value="pix">PIX (Código Copie e Cole)</option>
+                        <option value="cartao">Cartão de Crédito</option>
+                    </select>
+                </div>
+
+                <div id="pix-details" class="payment-details">
+                    <p><strong>Pagamento Instantâneo via PIX:</strong></p>
+                    <p>Utilize o código digital abaixo no aplicativo do seu banco para pagar:</p>
+                    <div class="pix-code-box" id="pix-code-output">Selecione produtos para gerar o código...</div>
+                </div>
+
+                <div id="card-details" class="payment-details">
+                    <p><strong>Dados do Cartão de Crédito:</strong></p>
+                    <br>
+                    <div class="form-group">
+                        <label>Número do Cartão:</label>
+                        <input type="text" placeholder="0000 0000 0000 0000" id="card-num">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Validade:</label>
+                            <input type="text" placeholder="MM/AA" id="card-expiry">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>CVV (Código):</label>
+                            <input type="text" placeholder="123" id="card-cvv">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" style="background-color: #2ecc71;">Confirmar e Finalizar Pedido</button>
+            </form>
+        </div>
+    </main>
+
+    <main id="sobre" class="page">
+        <h2>Sobre Nós</h2>
+        <br>
+        <p>A <strong>PetFome</strong> nasceu com o objetivo claro de unir tecnologia e bem-estar animal. Facilitamos o acesso às melhores rações do mercado diretamente na sua tela.</p>
+        <br>
+        <p>Garantimos procedência e trabalhamos apenas com marcas que possuem selos rigorosos de controle de qualidade biológica para o seu animal de estimação.</p>
+    </main>
+
+    <main id="contato" class="page">
+        <h2>Fale Conosco</h2>
+        <p>Ficou com alguma dúvida sobre as opções do catálogo? Nossa equipe responde rápido!</p>
+        <br>
+        <form onsubmit="alert('Obrigado! Sua mensagem foi transmitida com sucesso.'); event.preventDefault();">
+            <div class="form-group">
+                <label>Nome:</label>
+                <input type="text" required placeholder="Seu nome completo">
+            </div>
+            <div class="form-group">
+                <label>E-mail:</label>
+                <input type="email" required placeholder="seuemail@provedor.com">
+            </div>
+            <div class="form-group">
+                <label>Mensagem:</label>
+                <textarea rows="4" required placeholder="Escreva sua dúvida aqui..."></textarea>
+            </div>
+            <button type="submit">Enviar Formulário</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 PetFome - Nutrição Canina Digital de Alta Performance.</p>
+    </footer>
+
+    <script>
+        // 1. Troca Automática de Páginas
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // 2. Gerenciamento do Carrinho
+        let cart = [];
+        let totalAmount = 0;
+
+        function addToCart(productName, price) {
+            cart.push({ name: productName, price: price });
+            totalAmount += price;
+            updateCartDOM();
+            
+            // Se o PIX já estiver aberto na tela, atualiza o código dinamicamente
+            if(document.getElementById('payment-method').value === 'pix') {
+                generatePixCode();
+            }
+        }
+
+        function updateCartDOM() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalContainer = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="color: #777; padding: 1rem 0; text-align: center;">O carrinho está vazio atualmente.</p>';
+                cartTotalContainer.innerText = '0,00';
+                return;
+            }
+
+            cartItemsContainer.innerHTML = '';
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                itemElement.innerHTML = `
+                    <span>🐾 ${item.name}</span>
+                    <strong>R$ ${item.price.toFixed(2).replace('.', ',')}</strong>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+
+            cartTotalContainer.innerText = totalAmount.toFixed(2).replace('.', ',');
+        }
+
+        // 3. Exibição Condicional dos Métodos de Pagamento
+        function togglePaymentFields() {
+            const method = document.getElementById('payment-method').value;
+            const pixDetails = document.getElementById('pix-details');
+            const cardDetails = document.getElementById('card-details');
+
+            // Reseta exibições
+            pixDetails.style.display = 'none';
+            cardDetails.style.display = 'none';
+
+            if (method === 'pix') {
+                pixDetails.style.display = 'block';
+                generatePixCode();
+            } else if (method === 'cartao') {
+                cardDetails.style.display = 'block';
+            }
+        }
+
+        // Gera uma simulação de String do código PIX baseado no valor real
+        function generatePixCode() {
+            const codeBox = document.getElementById('pix-code-output');
+            if (totalAmount === 0) {
+                codeBox.innerText = "Adicione itens ao carrinho para gerar o código de pagamento.";
+                return;
+            }
+            // Simula um código criptografado contendo dados do valor da compra
+            const randomHash = Math.random().toString(36).substring(2, 12).toUpperCase();
+            codeBox.innerText = `00020126360014BR.GOV.BCB.PIX0114petfome@pix.com5204000053039865405${totalAmount.toFixed(2)}5802BR5907PETFOME6009SAOPAULO62140510${randomHash}`;
+        }
+
+        // 4. Validação e Finalização da Compra Digital
+        function finalizePurchase(event) {
+            event.preventDefault();
+
+            if (cart.length === 0) {
+                alert('Erro: Seu carrinho está vazio! Adicione pelo menos uma ração antes de fechar.');
+                return;
+            }
+
+            const method = document.getElementById('payment-method').value;
+
+            if (method === 'pix') {
+                alert(`✅ Pedido Confirmado via PIX!\n\nO sistema identificou a emissão do código no valor de R$ ${totalAmount.toFixed(2).replace('.', ',')}.\n\nO processamento será concluído assim que o banco acusar o recebimento.`);
+            } else if (method === 'cartao') {
+                const num = document.getElementById('card-num').value;
+                const cvv = document.getElementById('card-cvv').value;
+
+                if (!num || !cvv) {
+                    alert('Por favor, preencha as informações obrigatórias do cartão e o código de segurança (CVV).');
+                    return;
+                }
+                alert(`✅ Transação Aprovada no Cartão!\n\nValor de R$ ${totalAmount.toFixed(2).replace('.', ',')} lançado digitalmente.\n\nSua nota fiscal eletrônica foi enviada para processamento.`);
+            }
+
+            // Limpeza e reinicialização pós-compra bem-sucedida
+            cart = [];
+            totalAmount = 0;
+            document.getElementById('payment-form').reset();
+            document.getElementById('pix-details').style.display = 'none';
+            document.getElementById('card-details').style.display = 'none';
+            updateCartDOM();
+        }
+    </script>
+</body>
+</html>
